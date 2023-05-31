@@ -21,7 +21,7 @@ def convert_country_name_to_iso(country_name, code_type='alpha-2'):
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 credentials = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
 
-# Authenticate and open the Google Spreadsheet
+# Authenticate and open the Google Spreadsheet - needs to be a 'real' gspreadsheet!
 gc = gspread.authorize(credentials)
 spreadsheet = gc.open_by_key('google spreadsheet key')
 
@@ -38,12 +38,9 @@ missing_foods_data = missing_foods_sheet.get_all_records()
 missing_foods_df = pd.DataFrame(missing_foods_data)
 #replace empty strings by nan
 missing_foods_df = missing_foods_df.replace('', np.nan)
-print(missing_foods_data)
 
 # Load the result tab
 results_sheet = spreadsheet.worksheet('resultsABS')
-#results_data = missing_foods_sheet.get_all_records()
-#results_df = pd.DataFrame(missing_foods_data)
 
 # Iterate over the rows in the "MissingFoods20230508" DataFrame
 for index, row in missing_foods_df.iterrows():
