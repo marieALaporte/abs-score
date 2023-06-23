@@ -66,12 +66,12 @@ for index, row in missing_foods_df.iterrows():
             ].values
             if pd.notna(abs_score):
                 abs_score_specimen_location = abs_score
-    # if both country of originin are empty, keep the abs of the specimen location - can be simplify if unknown == 4
+    # if both country of originin (variety and species) are empty, keep the ABS of the specimen location - can be simplify if unknown == 4
     if not pd.notna(origin_variety) and not pd.notna(origin_species):
         abs_score_origin_variety = abs_score_specimen_location
         abs_score_origin_species = abs_score_specimen_location
     else:
-        # Look at Country of Origin/diversity
+        # Look at Country of Origin/diversity Variety
         if pd.notna(origin_variety):
             country_list = origin_variety.split(",")
             # Find the corresponding ABS score in the "ABSLevels" DataFrame based on the country code list and keep the highest
@@ -79,9 +79,9 @@ for index, row in missing_foods_df.iterrows():
                 abs_levels_df["Country name"].isin(country_list), "ABS score"
             ].max()
         else:
-            # if country of originin is empty, keep the abs of the specimen location - remove if we want to keep 4
+            # if country of originin variety is empty, keep the abs of the specimen location - remove if we want to keep 4
             abs_score_origin_variety = abs_score_specimen_location
-        # Look at Country of Origin/diversity
+        # Look at Country of Origin/diversity Species
         if pd.notna(origin_species):
             country_list = origin_species.split(",")
             # Find the corresponding ABS score in the "ABSLevels" DataFrame based on the country code list and keep the highest
@@ -89,10 +89,10 @@ for index, row in missing_foods_df.iterrows():
                 abs_levels_df["Country name"].isin(country_list), "ABS score"
             ].max()
         else:
-            # if country of originin is empty, keep the abs of the specimen location - remove if we want to keep 4
+            # if country of originin species is empty, keep the abs of the specimen location - remove if we want to keep 4
             abs_score_origin_species = abs_score_specimen_location
 
-    # Update the value in the "MissingFoods20230508" DataFrame under "Specimen ABS Status"
+    # Update the value in the "MissingFoods20230508" DataFrame under "Specimen ABS Status" by keeping the highest score between the different ABS scores
     missing_foods_df.at[index, "Specimen ABS Status"] = max(
         abs_score_specimen_location, abs_score_origin_variety, abs_score_origin_species
     )
